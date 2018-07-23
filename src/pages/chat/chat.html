@@ -1,0 +1,149 @@
+<!--
+  Generated template for the ChatPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+
+
+<ion-header class="HeaderHeight">
+
+  <ion-navbar>
+    <ion-title>Référence</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  
+  <div id="headerChat">
+  <ion-grid>
+    <ion-row center>
+          <ion-col col-2 class="txtCenter">
+              <i class="material-icons bgiconWhite">
+                  sms
+              </i>
+          </ion-col>
+          <ion-col col-10 class="headerContentChat">
+              <ion-row>
+              <ion-col col-1>
+                <i class="material-icons">flag</i>
+              </ion-col>
+              <ion-col col-11>
+                  Nom entrepot A super long for the test
+              </ion-col>
+               <br>
+              <ion-col col-1>
+                  <i class="material-icons">room</i>
+              </ion-col>
+              <ion-col col-11>
+                  Nom entrepot B
+              </ion-col>
+            </ion-row>
+
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+  </div> 
+  <!-- headerChat -->
+
+
+  <div id="timeLine_chat">
+    <div class="wrapMsgChat">
+        <div class="resp_user">Hello How are you my friend
+        <div class="time_msg">18:04</div>
+        </div>
+    </div>
+
+    <div class="wrapMsgChat">
+    <div class="resp_contact">Yeah ! fine, what is going on ? long time no see !
+        <div class="time_msg">18:13</div>
+        <div class="msgFrom_name">Reda Despatch 10 - Maroc Cargo SA</div>
+    </div>   
+    </div>
+
+    <div class="wrapMsgChat">
+    <div class="resp_user">Seriously?
+        <div class="time_msg">18:22</div>
+      </div>
+    </div>  
+  
+
+    <div class="wrapMsgChat">
+      <div class="resp_contact">How did the Italian chef die? He pasta way. The doctors cannoli do so much.
+          <div class="time_msg">18:38</div>
+          <div class="msgFrom_name">Reda Despatch 10 - Maroc Cargo SA</div>
+      </div>  
+    </div>  
+      
+
+    <div class="wrapMsgChat">
+      <div class="resp_user">Hello How are you my friend
+          <div class="time_msg">18:04</div>
+        </div>
+    </div>
+
+    <div class="wrapMsgChat">
+        <div class="resp_contact">Yeah ! fine, what is going on ? long time no see !
+            <div class="time_msg">18:13</div>
+            <div class="msgFrom_name">Reda Despatch 10 - Maroc Cargo SA</div>
+        </div>  
+    </div>     
+        
+    <div class="wrapMsgChat">
+        <div class="resp_user">Seriously?
+            <div class="time_msg">18:22</div>
+          </div>
+    </div>      
+      
+    <div class="wrapMsgChat">
+          <div class="resp_contact">How did the Italian chef die? He pasta way. The doctors cannoli do so much.
+              <div class="time_msg">18:38</div>
+              <div class="msgFrom_name">Reda Despatch 10 - Maroc Cargo SA</div>
+          </div>   
+    </div>          
+
+  </div> 
+
+ <div id="inputMsg">
+        <ion-grid>
+                <ion-row center>
+                      <ion-col col-10 class="txtCenter">
+                              <ion-item>
+                                <ion-textarea (ionFocus)="fixScroll()"  (ionBlur)="BlurScroll()"[(ngModel)]="msgChat" class="inputChat" name=""></ion-textarea> 
+                              </ion-item>
+                      </ion-col>
+                      <ion-col col-2 class="txtCenter">
+                            <i class="material-icons sendIconMsg" (click)="sendMsgChat()">
+                                send
+                            </i>
+                      </ion-col>                      
+                </ion-row>
+        </ion-grid>
+            
+ </div>
+
+</ion-content>
+
+
+<div id="chat_tools">
+        <ion-grid>
+            <ion-row center>
+                <ion-col col-3 class="txtCenter ">
+                    <i class="material-icons">group</i>
+                </ion-col>
+                <ion-col col-3 class="txtCenter">
+                    <i class="material-icons">attach_file</i>
+                </ion-col>
+                <ion-col col-3 class="txtCenter">
+                    <i class="material-icons">mic</i>
+                </ion-col>       
+                <ion-col col-3 class="txtCenter">
+                    <i class="material-icons">thumb_up</i>
+                </ion-col>                         
+            </ion-row>
+         </ion-grid> 
+</div>
+<!-- chat_tools -->

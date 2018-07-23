@@ -1,0 +1,148 @@
+<!--
+  Generated template for the MissionsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header #currentHeader>
+
+  <ion-navbar>
+    <ion-title>Liste des missions</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+
+  
+
+
+  <mat-card>
+    <mat-card-content>
+      <mat-tab-group class="demo-tab-group">
+
+
+        
+        <mat-tab label="Liste">
+            <ng-template mat-tab-label>
+                <i class="material-icons md-20">view_list</i><br>Missions
+              </ng-template>
+
+                      <!-- Internet fucked up -->
+                      <!-- <div class="instructionOrder">
+                        <ion-grid>
+                            <ion-row center>
+                              <ion-col col-2 class="txtCenter">
+                                  <i class="material-icons">
+                                      touch_app
+                                  </i>
+                              </ion-col>
+                              <ion-col col-10>
+                                  <div class="currentStatus">En attente de confirmation</div>
+                                  <div class="creneauOrder">{{ currentDate| date: "dd/MM/yyyy - HH:mm a" }}</div>
+                              </ion-col>
+      
+                                <div class="inLineAlert">
+                                    <strong>Attention !</strong> les missions ne sont pas encore
+                                    confirmées
+                                </div>
+      
+                          <div class="cont_btns adjustable">
+                            <button ion-button class="classicBtn greenBtn" round>
+                              <i class="material-icons">done</i>
+                              Confirmer
+                            </button>
+                          </div>
+      
+                        </ion-row>
+                        </ion-grid>
+
+                    </div>  -->
+      
+              <div class="cont_Orders" padding>
+                
+                              <div class="elem_order" (click)="detail(mission.id)" *ngFor="let mission of missionsList">
+                
+                                  <ion-grid>
+                                      <ion-row center>
+                                        <ion-col col-2 class="txtCenter">
+                                            <i class="material-icons">
+                                              {{IconMission[mission.status]}}
+                                            </i>
+                                            
+                                        </ion-col>
+                                        <ion-col col-8>
+                                            <div class="order_client">{{mission.reference}}</div>
+                
+                                            <div class="order_circuit">
+                                                <div class="iconFromTo"><i class="material-icons">flag</i></div>
+                                                <div>{{mission.infos_loading.location.name}}</div>
+                                            </div>
+                                            <div class="order_creneau_and_status">
+                                                <div class="iconTime"><i class="material-icons">access_time</i></div>
+                                                <div class="detailTime">{{mission.status}} - {{mission.infos_loading.location.time_start}}</div>
+                                              </div>                            
+                                              <div class="order_circuit">
+                                                <div class="iconFromTo"><i class="material-icons">location_on</i></div>
+                                                <div>{{mission.infos_delivery.location.name}}</div>
+                                              </div>
+                                              <div class="order_creneau_and_status">
+                                                <div class="iconTime"><i class="material-icons">access_time</i></div>
+                                                <div class="detailTime">{{mission.status}} - {{mission.infos_delivery.location.time_start}}</div>
+                                              </div>
+                
+                
+                                        </ion-col>
+                                        <ion-col col-2 class="txtCenter activeOrderList" >
+                                            <i class="material-icons">chevron_right</i>
+                                        </ion-col>
+                                      </ion-row>
+                                    </ion-grid>
+                
+                              </div>
+                            </div><!--cont_Orders -->
+</mat-tab>
+
+<mat-tab label="Map">
+      <ng-template mat-tab-label> 
+        <i class="material-icons md-20">map</i><br>Map
+      </ng-template>
+
+        <div #map id="map" [style.height]="heightMapView">
+          
+          <!-- Here is the map. -->
+          
+      </div>
+      <div id="relocateMe" (click)="addMap(CurrentLat,CurrentLan)">
+        <a href="#"><i class="material-icons">my_location</i></a>
+      </div>
+      <!-- <div id="yes" (click)="AdjustMapHeight()">Click me</div> -->
+
+</mat-tab>
+
+<mat-tab label="">
+    <ng-template mat-tab-label>
+    <i class="material-icons md-20">chat</i><br>Messages
+    </ng-template>
+</mat-tab>
+
+
+
+</mat-tab-group>
+</mat-card-content>
+</mat-card>
+
+
+
+
+
+
+
+
+</ion-content>
+
+
+
+

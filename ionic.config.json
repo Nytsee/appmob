@@ -1,0 +1,8 @@
+{
+  "name": "camiohub",
+  "app_id": "459d78c7",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
