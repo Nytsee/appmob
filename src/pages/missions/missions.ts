@@ -20,6 +20,7 @@ declare var offsetHeight;
  * Ionic pages and navigation.
  */
 
+
 @IonicPage()
 @Component({
   selector: 'page-missions',
@@ -36,10 +37,13 @@ export class Missions {
   CurrentLat:any;
   CurrentLan:any;
 
+  CurrentActiveOrder:any;
+  Markers = [];
+
 
 people = [
     {'name': 'brahim', 'date': '1111111', 'item2': false},
-    {'name': 'karim', 'date': '3333333', 'item2': false},
+    {'name': 'karim', 'date': '000000', 'item2': false},
     {'name': 'jamel', 'date': '2222222',  'item2': false}
 ];
 
@@ -47,8 +51,8 @@ sorted = this.people.sort(function(a, b) {
         return b.date < a.date ?  1 // if b should come earlier, push a to end
         : b.date > a.date ? -1 // if b should come later, push a to begin
         : 0;                   // a and b are equal    
-   // console.log("A : "+JSON.stringify(a))     
-   // console.log("B : "+JSON.stringify(b))
+   //console.log("A : "+JSON.stringify(a))     
+   //console.log("B : "+JSON.stringify(b))
 });
 
 
@@ -119,6 +123,8 @@ sorted = this.people.sort(function(a, b) {
         function compare(a,b) {
           let orderA = (a.status < 4) ? a.infos_loading.location.time_start : a.infos_delivery.location.time_start ;
           let orderB = (b.status < 4) ? b.infos_loading.location.time_start : b.infos_delivery.location.time_start ;
+          // console.log("A : "+orderA);
+          //console.log("B : "+orderB);
           if (orderA > orderB){
             return 1;
           }
@@ -129,9 +135,10 @@ sorted = this.people.sort(function(a, b) {
         }
         
         this.missionsList.sort(compare);
+        this.CurrentActiveOrder=this.missionsList[0];
+        console.log("Current Active Order"+JSON.stringify(this.CurrentActiveOrder))
         console.log("Sorted Missions : "+JSON.stringify(this.missionsList))
-
-
+      
     });
 
     console.log("Array Sorted : "+JSON.stringify(this.sorted));
@@ -150,10 +157,31 @@ sorted = this.people.sort(function(a, b) {
 
         this.currentPos = pos;
 
-        console.log("Geo position : "+pos.coords.longitude);
-        this.CurrentLat= pos.coords.latitude;
-        this.CurrentLan= pos.coords.longitude;
-        this.addMap(pos.coords.latitude,pos.coords.longitude);
+        if(typeof this.CurrentActiveOrder.infos_loading.location.geo.lat != typeof undefined){
+          console.log("ITS FULL")
+          console.log("Geo Order position : "+this.CurrentActiveOrder.infos_loading.location.geo.lat+" / "+this.CurrentActiveOrder.infos_loading.location.geo.lng);
+          this.CurrentLat= this.CurrentActiveOrder.infos_loading.location.geo.lat;
+          this.CurrentLan= this.CurrentActiveOrder.infos_loading.location.geo.lng;
+          this.Markers.push(  {'lan': this.CurrentLat, 'lng': this.CurrentLan, 'info': this.CurrentActiveOrder.infos_loading.location.name, 'icon':'http://maps.google.com/mapfiles/kml/pal5/icon20.png'} );    
+        }
+
+        if(this.CurrentActiveOrder.infos_delivery.location.geo.lat != ""){
+          console.log("Geo Order position : "+this.CurrentActiveOrder.infos_delivery.location.geo.lat+" / "+this.CurrentActiveOrder.infos_loading.location.geo.lng);
+          this.CurrentLat= this.CurrentActiveOrder.infos_delivery.location.geo.lat;
+          this.CurrentLan= this.CurrentActiveOrder.infos_delivery.location.geo.lng;
+          this.Markers.push(  {'lan': this.CurrentLat, 'lng': this.CurrentLan, 'info': this.CurrentActiveOrder.infos_delivery.location.name, 'icon':'http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png'} );    
+        }        
+        
+          console.log("Geo Mobile position : "+pos.coords.longitude);
+          this.CurrentLat= pos.coords.latitude;
+          this.CurrentLan= pos.coords.longitude;
+          this.Markers.push(  {'lan': this.CurrentLat, 'lng': this.CurrentLan, 'info': 'Votre position actuelle', 'icon':'iconUser'} );       
+      
+       
+        console.log("Markers array : "+JSON.stringify(this.Markers))
+        console.log("Total Markers : "+this.Markers.length);
+        this.addMap();
+
 
     },(err : PositionError)=>{
         console.log("error : " + err.message);
@@ -177,7 +205,11 @@ sorted = this.people.sort(function(a, b) {
 
 
   ionViewDidEnter(map){
-    this.getUserPosition();
+    setTimeout(() => {
+      if(this.CurrentActiveOrder){
+        this.getUserPosition();
+      }
+     }, 500);
   }
 
 
@@ -188,46 +220,97 @@ sorted = this.people.sort(function(a, b) {
       this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)+10) +"px";
     }
     if (this.platform.is('ios')) {
-     
-      this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)-5) +"px";
+      this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)+15) +"px";
     }    
   }
   
-  addMap(lat,long){
-
-    let latLng = new google.maps.LatLng(lat, long);
-
+  addMap(){
+    let latLng = new google.maps.LatLng(this.Markers[2].lan, this.Markers[2].lng);
     let mapOptions = {
-		center: latLng,
-		zoom: 15,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-
+    center: latLng,
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+    }  
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-    this.addMarker();
+
+ // Create a new directionsService object.
+ let directionsService = new google.maps.DirectionsService;
+  directionsService.route({
+   origin: this.Markers[0].lan +','+ this.Markers[0].lng,
+   destination: this.Markers[1].lan +','+ this.Markers[1].lng,
+   travelMode: 'DRIVING'
+ }, function(response, status) {
+   if (status === google.maps.DirectionsStatus.OK) {
+
+
+
+     let directionsDisplay = new google.maps.DirectionsRenderer({
+       suppressMarkers: true,
+       map: this.map,
+       directions: response,
+       draggable: false,
+       suppressPolylines: true
+       // IF YOU SET `suppressPolylines` TO FALSE, THE LINE WILL BE
+       // AUTOMATICALLY DRAWN FOR YOU.
+      })
+     };
+  
+  
+
+     // IF YOU WISH TO APPLY USER ACTIONS TO YOUR LINE YOU NEED TO CREATE A 
+     // `polyLine` OBJECT BY LOOPING THROUGH THE RESPONSE ROUTES AND CREATING A 
+     // LIST
+     let pathPoints = response.routes[0].overview_path.map(function (location) {
+       return {lat: location.lat(), lng: location.lng()};
+     });
+
+     let assumedPath = new google.maps.Polyline({
+      path: pathPoints, //APPLY LIST TO PATH
+      geodesic: false,
+      strokeColor: '#708090',
+      strokeOpacity: 0.7,
+      strokeWeight: 2.5
+    });
+    
+    assumedPath.setMap(this.map); // Set the path object to the map
+
+  }) 
+
+
+
+      this.addMarker(this.Markers);
   }
+
+  
 
 koko(lat,lng){
   var GOOGLE = {lat, lng};
   this.map.setCenter(GOOGLE);
 }
 
-  addMarker(){
+  addMarker(Markers){
 
-    let marker = new google.maps.Marker({
-    map: this.map,
-    animation: google.maps.Animation.DROP,
-    position: this.map.getCenter()
-    });
+    for(let ii=0 ; ii < Markers.length; ii++){
+         console.log(Markers[ii].lan+" / "+ii+" / "+ Markers[ii].info)
+         let marker = new google.maps.Marker({
+          map: this.map,
+          animation: google.maps.Animation.DROP,
+          position: {lat: Markers[ii].lan, lng: Markers[ii].lng}
+          //icon: Markers[ii].icon
+          });
+ 
+          let content = "<div id='infoWindow'><p>"+Markers[ii].info+"</p></div>";
+          let infoWindow = new google.maps.InfoWindow({
+          content: content
+          });
+    
+        google.maps.event.addListener(marker, 'click', () => {
+        infoWindow.open(this.map, marker);
+        });
 
-    let content = "<div id='infoWindow'><p>Votre position actuelle!</p></div>";
-    let infoWindow = new google.maps.InfoWindow({
-    content: content
-    });
+    }
+    
 
-    google.maps.event.addListener(marker, 'click', () => {
-    infoWindow.open(this.map, marker);
-    });
 
   }
 
