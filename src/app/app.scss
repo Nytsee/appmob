@@ -884,3 +884,25 @@ overflow: hidden;
     opacity:0;
   }
 }
+
+
+.ios, .md {
+ 
+    page-missions {
+        margin:0;
+        padding:0;
+        padding-bottom:12px;
+        display:block;
+      #map {
+        #infoWindow p{
+            color:$darkblue;
+            font-family: $mediumFont;
+            margin:0;
+            padding:0;
+            padding:3px 0;
+        }
+      }
+ 
+    }
+ 
+}

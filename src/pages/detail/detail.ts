@@ -92,6 +92,10 @@ export class Detail{
     this.StatusInfos.StatusIcon = this.MsgStatus[statusID][0];
     this.StatusInfos.StatusMsg = this.MsgStatus[statusID][1];
     this.StatusInfos.StatusAction = this.MsgStatus[statusID][3];
+
+    console.log("Status : "+statusID+"To "+this.Loading_point)
+
+
       if((statusID == 2) || (statusID == 3)){
         this.StatusInfos.StatusAlert = this.MsgStatus[statusID][2].replace("#DESTINATION#",this.Loading_point);
       }else{
@@ -116,6 +120,7 @@ export class Detail{
                       this.missionsDetail[0].infos_delivery.location.name ;
 
         this.Delivery_point = this.missionsDetail[0].infos_delivery.location.name;
+        this.Loading_point = this.missionsDetail[0].infos_loading.location.name;
         this.Status = this.missionsDetail[0].status;
         this.mission_id = this.missionsDetail[0].id;
 

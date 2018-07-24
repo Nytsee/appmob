@@ -4,7 +4,7 @@ import  $ from 'jquery';
 import {TweenMax} from 'gsap';
 
 import { MissionsProvider } from './../../providers/missions/missions';
-import { IonicPage, NavController, NavParams,ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ToastController, Platform } from 'ionic-angular';
 import { Geolocation ,GeolocationOptions ,Geoposition ,PositionError } from '@ionic-native/geolocation';
 import { Detail } from '../detail/detail';
 
@@ -37,6 +37,25 @@ export class Missions {
   CurrentLan:any;
 
 
+people = [
+    {'name': 'brahim', 'date': '1111111', 'item2': false},
+    {'name': 'karim', 'date': '3333333', 'item2': false},
+    {'name': 'jamel', 'date': '2222222',  'item2': false}
+];
+
+sorted = this.people.sort(function(a, b) {
+        return b.date < a.date ?  1 // if b should come earlier, push a to end
+        : b.date > a.date ? -1 // if b should come later, push a to begin
+        : 0;                   // a and b are equal    
+   // console.log("A : "+JSON.stringify(a))     
+   // console.log("B : "+JSON.stringify(b))
+});
+
+
+
+
+
+
   @ViewChild('map') mapElement: ElementRef;
   @ViewChild('currentHeader') thetopPart: ElementRef;
   map: any;
@@ -47,10 +66,10 @@ export class Missions {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public platform: Platform,
     public missionservice :MissionsProvider,
     private toastCtrl:ToastController,
-    private geolocation : Geolocation) {
-    this.heightMapView = (document.documentElement.clientHeight-94)+"px";
+    private geolocation : Geolocation) {    
     this.getMissions();
   }
 
@@ -94,8 +113,28 @@ export class Missions {
         this.presentToast("aucune mission enregistrer");
       }
 
-        console.log(this.missionsList);
+        //console.log("Missions : "+JSON.stringify(this.missionsList[0].infos_loading.location.time_start));
+        console.log(" Total : "+this.missionsList.length)
+
+        function compare(a,b) {
+          let orderA = (a.status < 4) ? a.infos_loading.location.time_start : a.infos_delivery.location.time_start ;
+          let orderB = (b.status < 4) ? b.infos_loading.location.time_start : b.infos_delivery.location.time_start ;
+          if (orderA > orderB){
+            return 1;
+          }
+          if (orderA < orderB){
+            return -1;
+          }
+          return 0;
+        }
+        
+        this.missionsList.sort(compare);
+        console.log("Sorted Missions : "+JSON.stringify(this.missionsList))
+
+
     });
+
+    console.log("Array Sorted : "+JSON.stringify(this.sorted));
   }
 
 
@@ -145,7 +184,13 @@ export class Missions {
   AdjustMapHeight(){
     this.viewHeight = this.thetopPart.nativeElement.offsetHeight
     console.log( this.viewHeight * 2)
-    this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)+10) +"px";
+    if (this.platform.is('android')) {
+      this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)+10) +"px";
+    }
+    if (this.platform.is('ios')) {
+     
+      this.heightMapView = (document.documentElement.clientHeight-(this.viewHeight*2)-5) +"px";
+    }    
   }
   
   addMap(lat,long){
@@ -162,6 +207,10 @@ export class Missions {
     this.addMarker();
   }
 
+koko(lat,lng){
+  var GOOGLE = {lat, lng};
+  this.map.setCenter(GOOGLE);
+}
 
   addMarker(){
 
@@ -171,7 +220,7 @@ export class Missions {
     position: this.map.getCenter()
     });
 
-    let content = "<p>Votre position actuelle!</p>";
+    let content = "<div id='infoWindow'><p>Votre position actuelle!</p></div>";
     let infoWindow = new google.maps.InfoWindow({
     content: content
     });
