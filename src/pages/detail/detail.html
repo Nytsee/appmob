@@ -64,7 +64,7 @@
 
 
      
-                  <div class="instructionOrder">
+                  <div class="instructionOrder" [hidden]="id_activeOrder != mission_id">
                     <ion-grid>
                         <ion-row center>
                           <ion-col col-2 class="txtCenter">
@@ -74,7 +74,7 @@
                           </ion-col>
                           <ion-col col-10>
                               <div class="currentStatus">{{StatusInfos.StatusMsg}}</div>
-                              <div class="creneauOrder">{{Status}}. 30 Sep 2018 - 00:49PM</div>
+                              <div class="creneauOrder">{{StatusInfos}}. 30 Sep 2018 - 00:49PM</div>
                           </ion-col>
 
                             <div class="inLineAlert" [innerHTML]="StatusInfos.StatusAlert">

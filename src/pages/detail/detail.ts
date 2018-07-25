@@ -44,6 +44,8 @@ export class Detail{
    Delivery_point:any ="Init";
    Loading_point:any ="Init";
 
+   id_activeOrder:any;
+
 
 
    MsgStatus:any = [
@@ -69,6 +71,8 @@ export class Detail{
     public loadingCtrl: LoadingController) {
 
     let id_detail = navParams.get('id_detail');
+    this.id_activeOrder = navParams.get('id_activeOrder');
+    console.log("______ID_________"+this.id_activeOrder)
     //console.log(id_detail)
     this.getdetail(id_detail);
     console.log("Detail array : "+this.missionsDetail)
@@ -148,8 +152,11 @@ export class Detail{
 
           setTimeout(function(){
             $(".readMoreDetail span:eq(1)").hide();
+            if(this.id_activeOrder == this.mission_id){
+              $(".instructionOrder").slideDown(250);
+            }
             TweenMax.staggerFrom(".elem_order_detail", 1.5, {opacity:0, y:20, ease:Elastic.easeOut, force3D:true}, 0.2);
-          }, 10);
+          }, 5);
       },
           err => console.error(err),
           () => console.log('getdetail completed')

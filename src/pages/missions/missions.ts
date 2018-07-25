@@ -115,30 +115,8 @@ sorted = this.people.sort(function(a, b) {
 
       }else{
         this.presentToast("aucune mission enregistrer");
-      }
+      } 
 
-        //console.log("Missions : "+JSON.stringify(this.missionsList[0].infos_loading.location.time_start));
-        console.log(" Total : "+this.missionsList.length)
-
-        function compare(a,b) {
-          let orderA = (a.status < 4) ? a.infos_loading.location.time_start : a.infos_delivery.location.time_start ;
-          let orderB = (b.status < 4) ? b.infos_loading.location.time_start : b.infos_delivery.location.time_start ;
-          // console.log("A : "+orderA);
-          //console.log("B : "+orderB);
-          if (orderA > orderB){
-            return 1;
-          }
-          if (orderA < orderB){
-            return -1;
-          }
-          return 0;
-        }
-        
-        this.missionsList.sort(compare);
-        this.CurrentActiveOrder=this.missionsList[0];
-        console.log("Current Active Order"+JSON.stringify(this.CurrentActiveOrder))
-        console.log("Sorted Missions : "+JSON.stringify(this.missionsList))
-      
     });
 
     console.log("Array Sorted : "+JSON.stringify(this.sorted));
@@ -206,9 +184,9 @@ sorted = this.people.sort(function(a, b) {
 
   ionViewDidEnter(map){
     setTimeout(() => {
-      if(this.CurrentActiveOrder){
+      //if(this.CurrentActiveOrder){
         this.getUserPosition();
-      }
+      //}
      }, 500);
   }
 
@@ -249,7 +227,7 @@ sorted = this.people.sort(function(a, b) {
        map: this.map,
        directions: response,
        draggable: false,
-       suppressPolylines: true
+       suppressPolylines: false
        // IF YOU SET `suppressPolylines` TO FALSE, THE LINE WILL BE
        // AUTOMATICALLY DRAWN FOR YOU.
       })
@@ -318,7 +296,31 @@ koko(lat,lng){
     this.missionservice.getMissions().subscribe((data)=>{
       if(data) {
         this.missionsList = data;
-        console.log("La list des missions : " +this.missionsList)
+        console.log("La list des missions : " +this.missionsList);
+
+        //console.log("Missions : "+JSON.stringify(this.missionsList[0].infos_loading.location.time_start));
+        console.log(" Total : "+this.missionsList.length)
+
+        this.missionsList.sort((a,b) => {
+          let orderA = (a.status < 4) ? a.infos_loading.location.time_start : a.infos_delivery.location.time_start ;
+          let orderB = (b.status < 4) ? b.infos_loading.location.time_start : b.infos_delivery.location.time_start ;
+          // console.log("A : "+orderA);
+          //console.log("B : "+orderB);
+          if (orderA > orderB){
+            return 1;
+          }
+          if (orderA < orderB){
+            return -1;
+          }
+          return 0;
+        })
+
+       
+        this.CurrentActiveOrder = this.missionsList[0];
+        console.log("Current Active Order"+JSON.stringify(this.CurrentActiveOrder))
+        console.log("Sorted Missions : "+JSON.stringify(this.missionsList))
+        
+
       }else{
         this.presentToast("aucune mission enregistrer");
       }
@@ -337,9 +339,11 @@ koko(lat,lng){
     toast.present();
   }
   detail(id){
+    //alert(this.CurrentActiveOrder.id)
     //console.log(id)
     this.navCtrl.push(Detail, {
-      id_detail: id
+      id_detail: id,
+      id_activeOrder: this.CurrentActiveOrder.id
     });
   }
 }
